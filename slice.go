@@ -1,10 +1,12 @@
 package slicehelper
 
-import "reflect"
+import (
+	"reflect"
+)
 
 // ReplaceNilWithEmptySlice recursively scans all field of the given structure, replacing all
 // nil slice with empty slice, and returns a POINTER to the given structure.
-func ReplaceNilWithEmptySlice(input interface{}) interface{} {
+func ReplaceNilWithEmptySlice(input interface{}) interface{} {\
 	val := reflect.ValueOf(input)
 	switch val.Kind() {
 	case reflect.Ptr:
@@ -67,10 +69,13 @@ func ReplaceNilWithEmptySlice(input interface{}) interface{} {
 				continue
 			}
 			valField := val.Field(i)
+			updates := reflect.ValueOf(ReplaceNilWithEmptySlice(valField.Interface()))
 			if valField.Kind() == reflect.Ptr {
-				newValField.Set(reflect.ValueOf(ReplaceNilWithEmptySlice(valField.Interface())))
+				newValField.Set(updates)
 			} else {
-				newValField.Set(reflect.Indirect(reflect.ValueOf(ReplaceNilWithEmptySlice(valField.Interface()))))
+				if updates.IsValid() {
+					newValField.Set(reflect.Indirect(updates))
+				}
 			}
 		}
 		return resp.Interface()
