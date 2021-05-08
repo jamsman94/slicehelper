@@ -70,12 +70,10 @@ func ReplaceNilWithEmptySlice(input interface{}) interface{} {
 			}
 			valField := val.Field(i)
 			updates := reflect.ValueOf(ReplaceNilWithEmptySlice(valField.Interface()))
-			if valField.Kind() == reflect.Ptr {
-				if updates.IsValid() {
+			if updates.IsValid() {
+				if valField.Kind() == reflect.Ptr {
 					newValField.Set(updates)
-				}
-			} else {
-				if updates.IsValid() {
+				} else {
 					newValField.Set(reflect.Indirect(updates))
 				}
 			}
