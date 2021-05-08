@@ -2,6 +2,8 @@ package slicehelper
 
 import "reflect"
 
+// ReplaceNilWithEmptySlice recursively scans all field of the given structure, replacing all
+// nil slice with empty slice, and returns a POINTER to the given structure.
 func ReplaceNilWithEmptySlice(input interface{}) interface{} {
 	val := reflect.ValueOf(input)
 	switch val.Kind() {
