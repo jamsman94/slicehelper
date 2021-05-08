@@ -6,7 +6,7 @@ import (
 
 // ReplaceNilWithEmptySlice recursively scans all field of the given structure, replacing all
 // nil slice with empty slice, and returns a POINTER to the given structure.
-func ReplaceNilWithEmptySlice(input interface{}) interface{} {\
+func ReplaceNilWithEmptySlice(input interface{}) interface{} {
 	val := reflect.ValueOf(input)
 	switch val.Kind() {
 	case reflect.Ptr:
@@ -71,7 +71,9 @@ func ReplaceNilWithEmptySlice(input interface{}) interface{} {\
 			valField := val.Field(i)
 			updates := reflect.ValueOf(ReplaceNilWithEmptySlice(valField.Interface()))
 			if valField.Kind() == reflect.Ptr {
-				newValField.Set(updates)
+				if updates.IsValid() {
+					newValField.Set(updates)
+				}
 			} else {
 				if updates.IsValid() {
 					newValField.Set(reflect.Indirect(updates))
