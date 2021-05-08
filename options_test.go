@@ -60,6 +60,7 @@ var _ = Describe("Replace nil Slice With Empty Slice", func() {
 	var nilSlicetoPointer []*string
 	var nilSlicetoMap []map[string]interface{}
 	var nilPointerToSlice *[]StructWithNormalSlice
+	var nilStruct StructWithInterface
 	DescribeTable("Testing with different structs",
 		func(p testCase) {
 			result := slicehelper.ReplaceNilWithEmptySlice(p.input)
@@ -273,6 +274,30 @@ var _ = Describe("Replace nil Slice With Empty Slice", func() {
 		Entry("struct with interface - nil slice interface", testCase{
 			input:  StructWithInterface{InnerStruct: nilSlice},
 			expect: &StructWithInterface{InnerStruct: []string{}},
+		}),
+		Entry("struct with nil interface", testCase{
+			input:  StructWithInterface{InnerStruct: nil},
+			expect: &StructWithInterface{InnerStruct: nil},
+		}),
+		Entry("struct with interface -- string", testCase{
+			input:  StructWithInterface{InnerStruct: "a"},
+			expect: &StructWithInterface{InnerStruct: "a"},
+		}),
+		Entry("struct with interface -- non-nil slice", testCase{
+			input:  StructWithInterface{InnerStruct: []string{"a"}},
+			expect: &StructWithInterface{InnerStruct: []string{"a"}},
+		}),
+		Entry("struct with interface -- nil struct", testCase{
+			input:  StructWithInterface{InnerStruct: nilStruct},
+			expect: &StructWithInterface{InnerStruct: nilStruct},
+		}),
+		Entry("struct with interface -- non-nil struct", testCase{
+			input:  StructWithInterface{InnerStruct: struct {
+				A string
+			}{"a"}},
+			expect: &StructWithInterface{InnerStruct: struct {
+				A string
+			}{"a"}},
 		}),
 	)
 })
